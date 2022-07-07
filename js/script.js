@@ -1,4 +1,4 @@
-//Title.ver
+//Title ver.1 
 //Fetch ratings with displaying but no hover 
 
 
@@ -10,8 +10,8 @@ $(document).ready(function(){
   $(document).one('mouseenter','a.instructorLink',function(){
 
     $('a.instructorLink').each(function(index){
-      var wrapper = "<b style='display:none'>Loading...</b>";
-      $(this).after(wrapper);
+      $(this).attr("title","Loading...");
+      console.log($(this).attr("title"));
       
     })
 
@@ -19,47 +19,39 @@ $(document).ready(function(){
 
 
 
-  //Show rating container and fetch rating when hover above professor link
-  $(document).on({
+  //Show rating container and fetch rating from RateMyProfessor
+  $(document).on('mouseenter','a.instructorLink', function(){
 
-    mouseenter:function(){
+
+
+    if($(this).attr("title")=="Loading..."){
       
-      $(this).next().show();
-
-      if($(this).next().text()=="Loading..."){
+      //get Professors' full names by fetching their link 
+      var instructorURL = $(this).attr("href");
+      fetch(instructorURL)
+      .then(response => response.text())
+      .then(responseText => {
+        let start = '<span id="oInstructorResults_lblInstructorName">';
+        let result = responseText.substring(responseText.indexOf(start) + start.length , responseText.indexOf('</span></strong>') - 1);
+        let name = result.replace(/\s+/g, ' ');
         
-        //get Professors' full names by fetching their link 
-        var instructorURL = $(this).attr("href");
-        fetch(instructorURL)
-        .then(response => response.text())
-        .then(responseText => {
-          let start = '<span id="oInstructorResults_lblInstructorName">';
-          let result = responseText.substring(responseText.indexOf(start) + start.length , responseText.indexOf('</span></strong>') - 1);
-          let name = result.replace(/\s+/g, ' ');
-          
-          //send search query link to the background 
-          var url = "http://www.ratemyprofessors.com/search/teachers?query="+name+"&sid=U2Nob29sLTExNDc=";
-          chrome.runtime.sendMessage(
-            {from:"tasks",message:url,id:instructorURL}
-          );
+        //send search query link to the background 
+        var url = "http://www.ratemyprofessors.com/search/teachers?query="+name+"&sid=U2Nob29sLTExNDc=";
+        chrome.runtime.sendMessage(
+          {from:"tasks",message:url,id:instructorURL}
+        );
 
-        })
-        console.log("Fetching!");
+      })
+      console.log("Fetching!");
 
-      }
-    },
-
-    mouseleave:function(){
-      $(this).next().hide();
     }
-  },
-  'a.instructorLink');
-    
-    
 
     
 
-  
+
+
+  });
+
 
   //Upon message, replace rating contain's text with fetched rating
   chrome.runtime.onMessage.addListener(function (response, sendResponse) {
@@ -87,11 +79,13 @@ $(document).ready(function(){
         console.log(jsonResp.avgRating);
         console.log(id);
         
-        $("[href='"+id+"']").next().text(jsonResp.avgRating+"/5");
+        $("[href='"+id+"']").attr("title",jsonResp.avgRating+"/5");
+        //$("[href='"+id+"']").next().text(jsonResp.avgRating+"/5");
       }
       else{
         console.log("Not a WashU Professor");
-        $("[href='"+id+"']").next().text("No Rating");
+        $("[href='"+id+"']").attr("title","No Rating");
+        //$("[href='"+id+"']").next().text("No Rating");
       }
 
       
