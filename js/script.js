@@ -48,7 +48,7 @@ $(document).ready(function () {
                       console.log("final search string: "+name);
 
                       //send search query link to the background 
-                      var url = "https://www.ratemyprofessors.com/search/teachers?query=" + name + "&sid=U2Nob29sLTExNDc="; 
+                      var url = "https://www.ratemyprofessors.com/search/professors/1147?q=" + name; 
                       chrome.runtime.sendMessage(
                           { from: "tasks", message: url, id: instructorURL, name:name, secondSearch:false }
                       );
@@ -103,19 +103,19 @@ $(document).ready(function () {
           if(values[2].resultCount==0){
             console.log("No result found in second search");
             $("[href='" + id + "']").next().html("<span style='display: inline-block; font-weight:normal'>No Result Found by&nbsp</span><br/>"+name+"<br/>");
-            $("[href='" + id + "']").next().append("<span style='margin-top:10px; display: inline-block; margin-left: 64px;'><a style='text-decoration: underline;' href='https://www.ratemyprofessors.com/search/teachers?query=" + name + "&sid=U2Nob29sLTExNDc=' target='_blank'>Verify</a>");
+            $("[href='" + id + "']").next().append("<span style='margin-top:10px; display: inline-block; margin-left: 64px;'><a style='text-decoration: underline;' href='https://www.ratemyprofessors.com/search/professors/1147?q=" + name + "' target='_blank'>Verify</a>");
           }
           else{
             jsonResp = values[4];
             if (jsonResp.school.__ref == "U2Nob29sLTExNDc=") {
               console.log("Found some results by last name");
               $("[href='" + id + "']").next().html("<span style='font-weight:normal;'>No WashU professor found by </span>"+name+"<span style='font-weight:normal;'>.<br/> Found results by last name </span>"+lastName+".<br/>");
-              $("[href='" + id + "']").next().append("<span style='margin-top:10px; display: inline-block; margin-left: 42px;'><a style='text-decoration: underline;' href='https://www.ratemyprofessors.com/search/teachers?query=" + lastName + "&sid=U2Nob29sLTExNDc=' target='_blank'>View Results</a><span>"); 
+              $("[href='" + id + "']").next().append("<span style='margin-top:10px; display: inline-block; margin-left: 42px;'><a style='text-decoration: underline;' href='https://www.ratemyprofessors.com/search/professors/1147?q=" + lastName + "' target='_blank'>View Results</a><span>"); 
             }
             else{
               console.log("No result found in second search");
               $("[href='" + id + "']").next().html("<span style='display: inline-block; font-weight:normal'>No Result Found by&nbsp</span><br/>"+name+"<br/>");
-              $("[href='" + id + "']").next().append("<span style='margin-top:10px; display: inline-block; margin-left: 64px;'><a style='text-decoration: underline;' href='https://www.ratemyprofessors.com/search/teachers?query=" + name + "&sid=U2Nob29sLTExNDc=' target='_blank'>Verify</a>");
+              $("[href='" + id + "']").next().append("<span style='margin-top:10px; display: inline-block; margin-left: 64px;'><a style='text-decoration: underline;' href='https://www.ratemyprofessors.com/search/professors/1147?q=" + name + "' target='_blank'>Verify</a>");
             }
           }
         }
@@ -127,7 +127,7 @@ $(document).ready(function () {
             let nameArray = name.split(' ');
             let lastName = nameArray[nameArray.length-2]
             console.log("last name search string: "+lastName);
-            var url = "https://www.ratemyprofessors.com/search/teachers?query=" + lastName + "&sid=U2Nob29sLTExNDc="; 
+            var url = "https://www.ratemyprofessors.com/search/professors/1147?q=" + lastName; 
             chrome.runtime.sendMessage(
                 { from: "tasks", message: url, id: id, name:name, lastName:lastName, secondSearch:true }
             );
@@ -154,7 +154,7 @@ $(document).ready(function () {
               console.log("Perform Search by Last Name");
               let nameArray = name.split(' ');
               let lastName = nameArray[nameArray.length-2]
-              var url = "https://www.ratemyprofessors.com/search/teachers?query=" + lastName + "&sid=U2Nob29sLTExNDc="; 
+              var url = "https://www.ratemyprofessors.com/search/professors/1147?q=" + lastName; 
               chrome.runtime.sendMessage(
                   { from: "tasks", message: url, id: id, name:name, lastName:lastName, secondSearch:true }
               );
